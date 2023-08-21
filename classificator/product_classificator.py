@@ -9,7 +9,7 @@ KEYWORDS_NOK = ["Tiernahrung", "Spielwaren", "Tierbedarf"]
 def product_classificator(product_name, product_categories):
 
     directory = os.path.dirname(os.path.abspath(__file__))
-    json_path = resource_filename('product-classificator', 'keywords.json')
+    json_path = resource_filename('product-classificator.data', 'keywords.json')
     with open(json_path, encoding='utf-8') as json_file:
         key_list = json.load(json_file)
 
