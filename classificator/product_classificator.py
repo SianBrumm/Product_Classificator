@@ -1,14 +1,16 @@
 import json
 import os
 from classificator.classificator_utils import edit_categories, edit_name, flatten_list, categories_classificator, name_classificator
-from importlib.resources import files
+import importlib.resources
 
 SEGMENTCODES = {'clothing':67000000, 'kitchenware': 73000000, 'food': 50000000, 'hygiene': 53000000, 'office_supplies': 62000000}
 KEYWORDS_NOK = ["Tiernahrung", "Spielwaren", "Tierbedarf"]
 
 def product_classificator(product_name, product_categories):
 
-    with open(files(classificator).joinpath("data/keywords.json"), encoding='utf-8') as json_file:
+    data_path = importlib.resources.path('classificator', 'data')
+    json_path = os.path.join(data_path, "keywords.json")
+    with open(json_path, encoding='utf-8') as json_file:
         key_list = json.load(json_file)
 
     classificator = {"clothing": [],
