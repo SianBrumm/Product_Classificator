@@ -10,13 +10,7 @@ def product_classificator(product_name, product_categories):
     script_directory = os.path.dirname(os.path.abspath(__file__))
     json_path = os.path.join(script_directory, json_filename)
 
-    try:
-        with open(json_path, encoding='utf-8') as json_file:
-            key_list = json.load(json_file)
-    except FileNotFoundError:
-        print(f"Die Datei {json_filename} wurde nicht gefunden.")
-    except json.JSONDecodeError:
-        print(f"Die Datei {json_filename} enthält ungültiges JSON.")
+    key_list = json.load(json_filename)
 
     classificator = {"clothing": [],
                     "hygiene": [],
