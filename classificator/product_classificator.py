@@ -7,7 +7,7 @@ KEYWORDS_NOK = ["Tiernahrung", "Spielwaren", "Tierbedarf"]
 
 def product_classificator(product_name, product_categories):
     
-    with open('keywords.json', encoding='utf-8') as json_file:
+    with open('.keywords.json', encoding='utf-8') as json_file:
         key_list = json.load(json_file)
 
     classificator = {"clothing": [],
