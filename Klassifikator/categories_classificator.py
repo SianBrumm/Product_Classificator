@@ -1,0 +1,61 @@
+import json
+import os
+from Klassifikator.classificator_utils import edit_categories, edit_name, flatten_list, categories_classificator, name_classificator
+
+SEGMENTCODES = {'clothing':67000000, 'kitchenware': 73000000, 'food': 50000000, 'hygiene': 53000000, 'office_supplies': 62000000}
+KEYWORDS_NOK = ["Tiernahrung", "Spielwaren", "Tierbedarf"]
+
+def product_classificator(product_name, product_categories):
+    json_filename = "Keywords.json"
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    json_path = os.path.join(script_directory, json_filename)
+
+    try:
+        with open(json_path, encoding='utf-8') as json_file:
+            key_list = json.load(json_file)
+    except FileNotFoundError:
+        print(f"Die Datei {json_filename} wurde nicht gefunden.")
+    except json.JSONDecodeError:
+        print(f"Die Datei {json_filename} enthält ungültiges JSON.")
+
+    classificator = {"clothing": [],
+                    "hygiene": [],
+                    "kitchenware": [],
+                    "office_supplies": [],
+                    "food": []}
+
+    for key_obj in key_list:
+        if not key_obj['critical']:
+            seg_code = key_obj['path'][0]['segment_code']
+            seg_name = key_obj['path'][0]['segment_name']
+            for key, value in SEGMENTCODES.items():
+                if value == seg_code:
+                    classificator[key].append({'keyword': key_obj['keyword'], 'seg_code':seg_code, 'seg_name': seg_name})
+                    break
+
+    clas_obj = {'segment_code': None, 'segment_name': None,
+                'family_code': None, 'family_name': None,
+                'class_code': None, 'class_name': None,
+                'brick_code': None, 'brick_name': None}
+
+    categories_edited = edit_categories(product_categories)
+    for nok in KEYWORDS_NOK:
+        if nok in categories_edited:
+            return clas_obj
+
+    for key, value in classificator.items():
+        if clas_obj["segment_code"] is None:
+            clas_obj = categories_classificator(clas_obj, value, categories_edited)
+        else:
+            break
+    
+    name_edited = edit_name(product_name)
+    if clas_obj['segment_code'] is None:
+        for key, value in classificator.items():
+            if clas_obj["segment_code"] is None:
+                clas_obj = name_classificator(clas_obj, value, name_edited)
+            else:
+                break
+
+    return clas_obj
+ 
