@@ -6,8 +6,10 @@ SEGMENTCODES = {'clothing':67000000, 'kitchenware': 73000000, 'food': 50000000, 
 KEYWORDS_NOK = ["Tiernahrung", "Spielwaren", "Tierbedarf"]
 
 def product_classificator(product_name, product_categories):
-    
-    with open('.keywords.json', encoding='utf-8') as json_file:
+
+    directory = os.path.dirname(os.path.abspath(__file__))
+    json_path = os.path.join(directory, "../keywords.json")
+    with open(json_path, encoding='utf-8') as json_file:
         key_list = json.load(json_file)
 
     classificator = {"clothing": [],
